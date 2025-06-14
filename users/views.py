@@ -120,17 +120,16 @@ class LogoutView(APIView):
     permission_classes = [IsAuthenticated]
 
     @swagger_auto_schema(
-        operation_description="사용자 로그아웃을 수행합니다. 현재 사용자의 토큰을 무효화합니다.",
-        request_body=openapi.Schema(
-            type=openapi.TYPE_OBJECT,
-            required=['refresh_token'],
-            properties={
-                'refresh_token': openapi.Schema(
-                    type=openapi.TYPE_STRING,
-                    description="무효화할 refresh token"
-                )
-            }
-        ),
+        operation_description="사용자 로그아웃을 수행합니다. 현재 사용자의 access token과 refresh token을 무효화합니다.",
+        manual_parameters=[
+            openapi.Parameter(
+                'X-Refresh-Token',
+                openapi.IN_HEADER,
+                description="무효화할 refresh token",
+                type=openapi.TYPE_STRING,
+                required=True
+            )
+        ],
         responses={
             200: openapi.Response(
                 description="로그아웃 성공",
@@ -164,10 +163,20 @@ class LogoutView(APIView):
     )
     def post(self, request):
         try:
-            refresh_token = request.data.get('refresh_token')
-            if refresh_token:
-                token = RefreshToken(refresh_token)
-                token.blacklist()
+            # 헤더에서 refresh token 가져오기
+            refresh_token = request.headers.get('X-Refresh-Token')
+            if not refresh_token:
+                return Response({
+                    'error': {
+                        'code': 'REFRESH_TOKEN_REQUIRED',
+                        'message': 'Refresh token이 필요합니다.'
+                    }
+                }, status=status.HTTP_400_BAD_REQUEST)
+
+            # refresh token 블랙리스트에 추가
+            token = RefreshToken(refresh_token)
+            token.blacklist()
+
             return Response({
                 'message': '로그아웃되었습니다.'
             }, status=status.HTTP_200_OK)
