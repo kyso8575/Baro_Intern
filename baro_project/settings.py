@@ -59,6 +59,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'baro_project.middleware.SecurityHeadersMiddleware',
 ]
 
 ROOT_URLCONF = 'baro_project.urls'
@@ -175,4 +176,12 @@ SWAGGER_SETTINGS = {
     'DOC_EXPANSION': 'none',
     'DEFAULT_MODEL_RENDERING': 'example',
     'DEFAULT_INFO': 'baro_project.urls.swagger_info',
+    'SECURITY': [{'Bearer': []}],
+    'VALIDATOR_URL': None,
+    'SUPPORTED_SUBMIT_METHODS': ['get', 'post', 'put', 'delete', 'patch'],
+    'SECURITY_REQUIREMENTS': [{'Bearer': []}],
+    'USE_SESSION_AUTH': False,
+    'PERSIST_AUTH': True,
+    'REFETCH_SCHEMA_WITH_AUTH': True,
+    'REFETCH_SCHEMA_ON_LOGOUT': True,
 }
