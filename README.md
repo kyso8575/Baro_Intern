@@ -77,6 +77,11 @@ pytest
 
 ## 배포 환경 (시험용)
 
+### API 테스트 접근
+- API 서버: `https://54.180.127.203/api/`
+- API 문서 (Swagger): `https://54.180.127.203/swagger/`
+- API 문서 (ReDoc): `https://54.180.127.203/redoc/`
+
 ### API 테스트 방법
 
 #### 1. Swagger UI 사용
