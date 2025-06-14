@@ -121,6 +121,16 @@ class LogoutView(APIView):
 
     @swagger_auto_schema(
         operation_description="사용자 로그아웃을 수행합니다. 현재 사용자의 토큰을 무효화합니다.",
+        request_body=openapi.Schema(
+            type=openapi.TYPE_OBJECT,
+            required=['refresh_token'],
+            properties={
+                'refresh_token': openapi.Schema(
+                    type=openapi.TYPE_STRING,
+                    description="무효화할 refresh token"
+                )
+            }
+        ),
         responses={
             200: openapi.Response(
                 description="로그아웃 성공",
@@ -135,6 +145,17 @@ class LogoutView(APIView):
                 examples={
                     "application/json": {
                         "detail": "인증 자격이 제공되지 않았습니다."
+                    }
+                }
+            ),
+            400: openapi.Response(
+                description="잘못된 요청",
+                examples={
+                    "application/json": {
+                        "error": {
+                            "code": "LOGOUT_FAILED",
+                            "message": "로그아웃 처리 중 오류가 발생했습니다."
+                        }
                     }
                 }
             )
