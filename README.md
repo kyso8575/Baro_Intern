@@ -75,6 +75,50 @@ python manage.py runserver
 pytest
 ```
 
+## 배포 환경 (시험용)
+
+### API 테스트 방법
+
+#### 1. Swagger UI 사용
+- 제공받은 API 서버 주소에 `/swagger/`를 붙여 접속
+  예: `https://[서버주소]/swagger/`
+- API 문서화 및 테스트를 위한 인터페이스 제공
+- 각 API의 요청/응답 형식, 파라미터 등을 확인 가능
+
+#### 2. 인증이 필요한 API 테스트 방법
+1. 로그인 API 호출
+   ```json
+   {
+       "username": "your_username",
+       "password": "your_password"
+   }
+   ```
+   - 응답으로 `access_token`과 `refresh_token` 발급
+
+2. Swagger UI에서 인증 설정
+   - 상단의 "Authorize" 버튼 클릭
+   - `Bearer your_access_token_here` 형식으로 입력
+   - Authorize 버튼 클릭
+
+3. API 테스트
+   - 인증이 필요한 API는 자동으로 Authorization 헤더에 토큰이 포함됨
+   - 로그아웃 API의 경우 추가로 `X-Refresh-Token` 헤더 필요
+
+### 주의사항
+1. 토큰 관리
+   - Access Token: 1일(24시간) 유효
+   - Refresh Token: 7일 유효
+   - 로그아웃 시 두 토큰 모두 무효화
+
+2. API 요청 시 헤더
+   - 인증이 필요한 API: `Authorization: Bearer <access_token>`
+   - 로그아웃 API: 추가로 `X-Refresh-Token: <refresh_token>` 헤더 필요
+
+3. 보안
+   - 시험용 서버이므로 실제 프로덕션 환경과 보안 설정이 다를 수 있음
+   - 민감한 정보는 포함하지 않도록 주의
+   - 시험 종료 후 서버 접근 정보는 무효화됨
+
 ## 라이선스
 
 BSD License 
